@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8"/>
+<title>Insert title here</title>
+</head>
+<body>
+	<nav class="navbar-default navbar-static-side" role="navigation" th:fragment="navigation">
+        <div class="sidebar-collapse">
+            <ul class="nav metismenu" id="side-menu">
+                <li class="nav-header">
+                    <div class="dropdown profile-element"> 
+                    	<span>
+                            <img alt="image" class="img-circle" th:src="@{/img/cat.jpg}" height="48px" width="48px" />
+                             <!--<img  th:src="@{'/img/user/'+${session.user.getUserName()}+'.jpg'}" alt="image" class="img-circle" height="48px" width="48px"/>-->
+                            <!--<tb th:text="@{session.user.getImage()}"></tb>-->
+						</span>
+                    	<a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            <span class="clear"> 
+                            	<span class="block m-t-xs">
+                            		<strong class="font-bold" th:text="${session.user.getUserName()}">username</strong>
+                             	</span> 
+                             </span>
+                     	</a>
+                    </div>
+                    <div class="logo-element">
+                        YX
+                    </div>
+                </li>
+                <li>
+                    <a th:href="@{dashboard}"><i class="fa fa-diamond"></i> <span class="nav-label">仪表盘</span></a>
+                </li>
+
+                <li>
+                    <a href="#"><i class="fa fa-bar-chart-o"></i> <span class="nav-label">商品管理</span><span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li id="itemManage"><a th:href="@{itemManage_0_0_0}">商品管理</a></li>
+                        <li id="stockManage"><a th:href="@{stockManage_0_0_0}">库存管理</a></li>
+                        <li id="itemCategoryManage"><a th:href="@{itemCategoryManage_0_0_0}">商品分类</a></li>
+                        <li id="recoverManage"><a th:href="@{recoverManage_0_0_0}">回收管理</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="mailbox.html"><i class="fa fa-envelope"></i> <span class="nav-label">订单管理</span><span class="label label-warning pull-right">16</span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li id="orderManage"><a th:href="@{orderManage_0_0_0}">订单管理</a></li>
+                        <li id="orderRefund"><a th:href="@{orderRefund_0_0_0}">订单退款</a></li>
+                        <li id="shippingManage"><a th:href="@{shippingManage_0_0_0}">发货管理</a></li>
+                        <li id="deliveryManage"><a th:href="@{deliveryManage}">物流公司</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-shopping-cart"></i> <span class="nav-label">用户管理</span><span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li id="userManage"><a th:href="@{userManage}">信息修改</a></li>
+                    </ul>
+                </li>
+
+            </ul>
+        </div>
+    </nav>
+</body>
+</html>
+
+
+

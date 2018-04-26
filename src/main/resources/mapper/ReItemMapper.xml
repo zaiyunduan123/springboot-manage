@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jesper.mapper.ReItemMapper">
+    <resultMap id="BaseResultMap" type="com.jesper.model.ReItem">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="sell_point" property="sellPoint" jdbcType="VARCHAR"/>
+        <result column="price" property="price" jdbcType="INTEGER"/>
+        <result column="num" property="num" jdbcType="INTEGER"/>
+        <result column="barcode" property="barcode" jdbcType="VARCHAR"/>
+        <result column="image" property="image" jdbcType="VARCHAR"/>
+        <result column="cid" property="cid" jdbcType="INTEGER"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="recovered" jdbcType="TIMESTAMP" property="recovered"/>
+    </resultMap>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tb_re_item
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+    <insert id="insert" parameterType="com.jesper.model.ReItem">
+    insert into tb_re_item (id, title, sell_point,
+      price, num, barcode, 
+      image, cid, status, 
+      recovered)
+    values ( #{id, jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{sellPoint,jdbcType=VARCHAR},
+      #{price,jdbcType=INTEGER}, #{num,jdbcType=INTEGER}, #{barcode,jdbcType=VARCHAR},
+      #{image,jdbcType=VARCHAR}, #{cid,jdbcType=INTEGER}, #{status,jdbcType=TINYINT},
+      #{recovered,jdbcType=TIMESTAMP})
+  </insert>
+    <update id="updateByPrimaryKey" parameterType="com.jesper.model.ReItem">
+    update tb_re_item
+    set title = #{title,jdbcType=VARCHAR},
+      sell_point = #{sellPoint,jdbcType=VARCHAR},
+      price = #{price,jdbcType=INTEGER},
+      num = #{num,jdbcType=INTEGER},
+      barcode = #{barcode,jdbcType=VARCHAR},
+      image = #{image,jdbcType=VARCHAR},
+      cid = #{cid,jdbcType=INTEGER},
+      status = #{status,jdbcType=TINYINT},
+      recovered = #{recovered,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, title, sell_point, price, num, barcode, image, cid, status, recovered
+    from tb_re_item
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+    <select id="selectAll" resultMap="BaseResultMap">
+    select id, title, sell_point, price, num, barcode, image, cid, status, recovered
+    from tb_re_item ORDER BY recovered DESC
+  </select>
+
+
+    <select id="count" resultType="java.lang.Integer" parameterType="com.jesper.model.ReItem">
+    SELECT count(*) from tb_re_item
+  </select>
+</mapper>

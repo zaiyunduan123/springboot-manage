@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jesper.mapper.OrderItemMapper">
+    <resultMap id="BaseResultMap" type="com.jesper.model.OrderItem">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="item_id" property="itemId" jdbcType="VARCHAR"/>
+        <result column="order_id" property="orderId" jdbcType="VARCHAR"/>
+        <result column="num" property="num" jdbcType="INTEGER"/>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="price" property="price" jdbcType="BIGINT"/>
+        <result column="total_fee" property="totalFee" jdbcType="BIGINT"/>
+        <result column="pic_path" property="picPath" jdbcType="VARCHAR"/>
+    </resultMap>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from tb_order_item
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+    <insert id="insert" parameterType="com.jesper.model.OrderItem">
+    insert into tb_order_item (id, item_id, order_id, 
+      num, title, price, total_fee, 
+      pic_path)
+    values (#{id,jdbcType=VARCHAR}, #{itemId,jdbcType=VARCHAR}, #{orderId,jdbcType=VARCHAR}, 
+      #{num,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{price,jdbcType=BIGINT}, #{totalFee,jdbcType=BIGINT}, 
+      #{picPath,jdbcType=VARCHAR})
+  </insert>
+    <update id="updateByPrimaryKey" parameterType="com.jesper.model.OrderItem">
+    update tb_order_item
+    set item_id = #{itemId,jdbcType=VARCHAR},
+      order_id = #{orderId,jdbcType=VARCHAR},
+      num = #{num,jdbcType=INTEGER},
+      title = #{title,jdbcType=VARCHAR},
+      price = #{price,jdbcType=BIGINT},
+      total_fee = #{totalFee,jdbcType=BIGINT},
+      pic_path = #{picPath,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select id, item_id, order_id, num, title, price, total_fee, pic_path
+    from tb_order_item
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+
+    <select id="selectByPrimaryOrderKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select id, item_id, order_id, num, title, price, total_fee, pic_path
+    from tb_order_item
+    where order_id = #{orderId,jdbcType=VARCHAR}
+  </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+    select id, item_id, order_id, num, title, price, total_fee, pic_path
+    from tb_order_item
+  </select>
+
+
+</mapper>

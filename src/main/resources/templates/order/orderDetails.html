@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+
+
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+    <link th:href="@{/font-awesome/css/font-awesome.css}" rel="stylesheet" />
+
+    <!-- Toastr style -->
+    <link th:href="@{/css/plugins/toastr/toastr.min.css}" rel="stylesheet"/>
+
+    <link th:href="@{/css/style.css}" rel="stylesheet" />
+
+    <!-- summernote style -->
+    <link th:href="@{/css/plugins/summernote/summernote.css}" rel="stylesheet" />
+    <link th:href="@{/css/plugins/summernote/summernote-bs3.css}" rel="stylesheet" />
+
+</head>
+
+<body>
+
+<div id="wrapper">
+    <nav class="navbar-default navbar-static-side" role="navigation" th:include="nav :: navigation"></nav>
+    <div id="page-wrapper" class="gray-bg">
+        <div class="border-bottom" th:include="header :: headerTop"></div>
+        <div class="row wrapper border-bottom white-bg page-heading" th:fragment="headerNav">
+            <div class="col-lg-10">
+                <h2>订单管理</h2>
+                <ol class="breadcrumb">
+                    <li>
+                        <a href="#">首页</a>
+                    </li>
+                    <li>
+                        <a>订单管理</a>
+                    </li>
+                    <li>
+                        <a>订单管理</a>
+                    </li>
+                    <li class="active">
+                        <strong>订单详情</strong>
+                    </li>
+                </ol>
+            </div>
+            <div class="col-lg-2">
+            </div>
+        </div>
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>订单详情</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                            <form id="formTag" action="orderDetails" method="POST" class="form-horizontal" enctype="multipart/form-data">
+
+                                <div class="form-group"><label class="col-sm-2 control-label">订单号：</label>
+                                    <div class="col-sm-10">
+                                        <input id="orderId" readonly="readonly" name="orderId" type="text" class="form-control" th:value="${order.orderId}"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group"><label class="col-sm-2 control-label">商品id：</label>
+                                    <div class="col-sm-10">
+                                        <input id="itemId" readonly="readonly" name="itemId" type="text" class="form-control" th:value="${order.itemId}"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group"><label class="col-sm-2 control-label">商品购买数量：</label>
+                                    <div class="col-sm-10">
+                                        <input id="num" readonly="readonly" name="num" type="text" class="form-control" th:value="${order.num}"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group"><label class="col-sm-2 control-label">商品标题：</label>
+                                    <div class="col-sm-10">
+                                        <input id="itemTitle" readonly="readonly" name="itemTitle" type="text" class="form-control" th:value="${order.itemTitle}"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group"><label class="col-sm-2 control-label">商品总金额(元)：</label>
+                                    <div class="col-sm-10">
+                                        <input id="totalFee" readonly="readonly" name="totalFee" type="text" class="form-control" th:value="${order.totalFee}"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group"><label class="col-sm-2 control-label">快递费(元)：</label>
+                                    <div class="col-sm-10">
+                                        <input id="postFee" readonly="readonly" name="postFee" type="text" class="form-control" th:value="${order.postFee}"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group"><label class="col-sm-2 control-label">实付金额(元)：</label>
+                                    <div class="col-sm-10">
+                                        <input id="payment" readonly="readonly" name="payment" type="text" class="form-control" th:value="${order.payment}"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group"><label class="col-sm-2 control-label">支付类型：</label>
+                                    <div class="col-sm-10">
+                                        <input id="paymentTypeStr" readonly="readonly" name="paymentTypeStr" type="text" class="form-control" th:value="${order.paymentTypeStr}"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group"><label class="col-sm-2 control-label">订单创建时间：</label>
+                                    <div class="col-sm-10">
+                                        <input id="dateStr1" readonly="readonly" name="dateStr1" type="text" class="form-control" th:value="${order.dateStr1}"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group"><label class="col-sm-2 control-label">订单更新时间：</label>
+                                    <div class="col-sm-10">
+                                        <input id="dateStr2" readonly="readonly" name="dateStr2" type="text" class="form-control" th:value="${order.dateStr2}"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group"><label class="col-sm-2 control-label">付款时间：</label>
+                                    <div class="col-sm-10">
+                                        <input id="dateStr3" readonly="readonly" name="dateStr3" type="text" class="form-control" th:value="${order.dateStr3}"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group"><label class="col-sm-2 control-label">发货时间：</label>
+                                    <div class="col-sm-10">
+                                        <input id="dateStr4" readonly="readonly" name="dateStr4" type="text" class="form-control" th:value="${order.dateStr4}"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group"><label class="col-sm-2 control-label">交易完成时间：</label>
+                                    <div class="col-sm-10">
+                                        <input id="dateStr5" readonly="readonly" name="dateStr5" type="text" class="form-control" th:value="${order.dateStr5}"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group"><label class="col-sm-2 control-label">物流公司：</label>
+                                    <div class="col-sm-10">
+                                        <input id="shippingName" readonly="readonly" name="shippingName" type="text" class="form-control" th:value="${order.shippingName}"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group"><label class="col-sm-2 control-label">物流单号：</label>
+                                    <div class="col-sm-10">
+                                        <input id="shippingCode" readonly="readonly" name="shippingCode" type="text" class="form-control" th:value="${order.shippingCode}"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group"><label class="col-sm-2 control-label">用户id：</label>
+                                    <div class="col-sm-10">
+                                        <input id="userId" readonly="readonly" name="userId" type="text" class="form-control" th:value="${order.userId}"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group"><label class="col-sm-2 control-label">买家备注：</label>
+                                    <div class="col-sm-10">
+                                        <input id="buyerMessage" readonly="readonly" name="buyerMessage" type="text" class="form-control" th:value="${order.buyerMessage}"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group"><label class="col-sm-2 control-label">买家昵称：</label>
+                                    <div class="col-sm-10">
+                                        <input id="buyerNick" readonly="readonly" name="buyerNick" type="text" class="form-control" th:value="${order.buyerNick}"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group"><label class="col-sm-2 control-label">买家是否已经评价：</label>
+                                    <div class="col-sm-10">
+                                        <input id="buyerRateStr" readonly="readonly" name="buyerRateStr" type="text" class="form-control" th:value="${order.buyerRateStr}"/>
+                                    </div>
+                                </div>
+
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <div class="col-sm-4 col-sm-offset-2">
+                                        <button id="submitButton" class="btn btn-primary" onclick="javascrtpt:window.location.href='orderManage_0_0_0'" type="button">&nbsp;&nbsp;&nbsp;&nbsp;返&nbsp;&nbsp;&nbsp;&nbsp;回&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="footer" th:include="footer :: copyright"></div>
+    </div>
+</div>
+
+<!-- Mainly scripts -->
+<script th:src="@{/js/jquery-2.1.1.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/plugins/metisMenu/jquery.metisMenu.js}"></script>
+<script th:src="@{/js/plugins/slimscroll/jquery.slimscroll.min.js}"></script>
+
+<!-- Peity -->
+<script th:src="@{/js/plugins/peity/jquery.peity.min.js}"></script>
+
+<!-- Custom and plugin javascript -->
+<script th:src="@{/js/inspinia.js}"></script>
+<script th:src="@{/js/plugins/pace/pace.min.js}"></script>
+
+<!-- Toastr script -->
+<script th:src="@{/js/plugins/toastr/toastr.min.js}"></script>
+
+<!-- common -->
+<script th:src="@{/js/common.js}"></script>
+
+<!-- SUMMERNOTE -->
+<script th:src="@{/js/plugins/summernote/summernote.min.js}"></script>
+
+
+</body>
+
+</html>

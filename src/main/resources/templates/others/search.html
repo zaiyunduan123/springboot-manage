@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>后台信息管理系统</title>
+
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+    <link th:href="@{/font-awesome/css/font-awesome.css}" rel="stylesheet" />
+
+    <!-- Toastr style -->
+    <link th:href="@{/css/plugins/toastr/toastr.min.css}" rel="stylesheet"/>
+
+    <link th:href="@{/css/style.css}" rel="stylesheet" />
+
+    <!-- summernote style -->
+    <link th:href="@{/css/plugins/summernote/summernote.css}" rel="stylesheet" />
+    <link th:href="@{/css/plugins/summernote/summernote-bs3.css}" rel="stylesheet" />
+
+</head>
+
+<body>
+
+<div id="wrapper">
+    <nav class="navbar-default navbar-static-side" role="navigation" th:include="nav :: navigation"></nav>
+    <div id="page-wrapper" class="gray-bg">
+        <div class="border-bottom" th:include="header :: headerTop"></div>
+        <div class="row wrapper border-bottom white-bg page-heading" th:fragment="headerNav">
+            <div class="col-lg-10">
+                <h2>快递跟踪</h2>
+                <ol class="breadcrumb">
+                    <li>
+                        <a href="#">首页</a>
+                    </li>
+                    <li>
+                        <a>系统管理</a>
+                    </li>
+                    <li>
+                        <a>物流公司</a>
+                    </li>
+                    <li class="active">
+                        <strong>快递查询</strong>
+                    </li>
+                </ol>
+            </div>
+            <div class="col-lg-2">
+            </div>
+        </div>
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>快递跟踪查询</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                            <form id="formTag" action="search" method="POST" class="form-horizontal" enctype="multipart/form-data">
+                                <div class="row">
+                                    <div class="col-sm-3 m-b-xs">
+                                        <a id="deliveryName" name="deliveryName" th:if="${delivery.deliverySort == 'A' or delivery.deliverySort == 'F' or delivery.deliverySort == 'K'  or delivery.deliverySort == 'S' or delivery.deliverySort == 'Z'}" class="btn btn-success " th:text="${delivery.deliveryName}">搜索</a>
+
+                                        <a id="deliveryName" name="deliveryName"  th:if="${delivery.deliverySort == 'B' or delivery.deliverySort == 'G' or delivery.deliverySort == 'L'  or delivery.deliverySort == 'T'}"  class="btn btn-primary " th:text="${delivery.deliveryName}">搜索</a>
+
+                                        <a id="deliveryName" name="deliveryName" th:if="${delivery.deliverySort == 'C' or delivery.deliverySort == 'H' or delivery.deliverySort == 'M'  or delivery.deliverySort == 'U'}"  class="btn btn-info " th:text="${delivery.deliveryName}">搜索</a>
+
+                                        <a id="deliveryName" name="deliveryName" th:if="${delivery.deliverySort == 'D' or delivery.deliverySort == 'I' or delivery.deliverySort == 'O'  or delivery.deliverySort == 'X'}"  class="btn btn-warning " th:text="${delivery.deliveryName}">搜索</a>
+
+                                        <a id="deliveryName" name="deliveryName"  th:if="${delivery.deliverySort == 'E' or delivery.deliverySort == 'J' or delivery.deliverySort == 'Q'  or delivery.deliverySort == 'Y'}" class="btn btn-danger " th:text="${delivery.deliveryName}">搜索</a>
+
+                                    </div>
+                                    <div class="col-sm-3 m-b-xs">
+                                        <input id="expressNo" name="expressNo" placeholder="运单号" class="form-control" type="text" th:value="${delivery.expressNo}"/>
+                                    </div>
+                                    <div class="col-sm-2 m-b-xs">
+                                        <button class="btn btn-primary btn-block" type="submit"><i class="fa fa-search"></i>&nbsp;&nbsp;&nbsp;&nbsp;<strong>查询快递</strong></button>
+                                    </div>
+
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>跟踪记录</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                            <div class="table-responsive">
+                                <table class=" table table-hover" data-page-size="10">
+                                    <thead>
+                                    <tr>
+                                        <th width="5%">序号</th>
+                                        <th width="20%">跟踪记录</th>
+                                        <th width="20%">定位</th>
+                                        <th width="20%">时间</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="express : ${list}">
+                                        <td class="info" th:if="${express.id == 1}" th:text="${express.id}">Onions</td>
+                                        <td class="info" th:if="${express.id == 1}" th:text="${express.context}">Onions</td>
+                                        <td class="info" th:if="${express.id == 1}" th:text="${express.location}">Onions</td>
+                                        <td class="info" th:if="${express.id == 1}" th:text="${express.time}">Onions</td>
+                                        <td th:if="${express.id != 1}" th:text="${express.id}">Onions</td>
+                                        <td th:if="${express.id != 1}" th:text="${express.context}">Onions</td>
+                                        <td th:if="${express.id != 1}" th:text="${express.location}">Onions</td>
+                                        <td th:if="${express.id != 1}" th:text="${express.time}">Onions</td>
+
+                                    </tr>
+                                    </tbody>
+                                    <tfoot>
+                                    <tr>
+                                        <td colspan="8">
+                                            <ul id="pageHTML" class="pagination pull-right"></ul>
+                                        </td>
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="footer" th:include="footer :: copyright"></div>
+    </div>
+</div>
+
+<!-- Mainly scripts -->
+<script th:src="@{/js/jquery-2.1.1.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/plugins/metisMenu/jquery.metisMenu.js}"></script>
+<script th:src="@{/js/plugins/slimscroll/jquery.slimscroll.min.js}"></script>
+
+<!-- Peity -->
+<script th:src="@{/js/plugins/peity/jquery.peity.min.js}"></script>
+
+<!-- Custom and plugin javascript -->
+<script th:src="@{/js/inspinia.js}"></script>
+<script th:src="@{/js/plugins/pace/pace.min.js}"></script>
+
+<!-- Toastr script -->
+<script th:src="@{/js/plugins/toastr/toastr.min.js}"></script>
+
+<!-- common -->
+<script th:src="@{/js/common.js}"></script>
+
+<!-- SUMMERNOTE -->
+<script th:src="@{/js/plugins/summernote/summernote.min.js}"></script>
+
+
+<script th:inline="javascript">
+
+</script>
+<script th:inline="javascript">
+    $(document).ready(function () {
+        //初始化编辑器
+        $('#summernote').summernote({
+            height: 300,
+            codemirror: {
+                mode: 'text/html',
+                htmlMode: true,
+                lineNumbers: true,
+                theme: 'monokai'
+            }
+        });
+        //编辑器赋值
+
+        //提交
+        $("#submitButton").click(function(){
+
+            $("#formTag").submit();
+        });
+    });
+</script>
+
+</body>
+
+</html>

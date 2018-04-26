@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jesper.mapper.OrderMapper">
+    <resultMap id="BaseResultMap" type="com.jesper.model.Order">
+        <id column="order_id" jdbcType="VARCHAR" property="orderId"/>
+        <result column="payment" jdbcType="VARCHAR" property="payment"/>
+        <result column="payment_type" jdbcType="INTEGER" property="paymentType"/>
+        <result column="post_fee" jdbcType="VARCHAR" property="postFee"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="payment_time" jdbcType="TIMESTAMP" property="paymentTime"/>
+        <result column="consign_time" jdbcType="TIMESTAMP" property="consignTime"/>
+        <result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
+        <result column="close_time" jdbcType="TIMESTAMP" property="closeTime"/>
+        <result column="shipping_name" jdbcType="VARCHAR" property="shippingName"/>
+        <result column="shipping_code" jdbcType="VARCHAR" property="shippingCode"/>
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="buyer_message" jdbcType="VARCHAR" property="buyerMessage"/>
+        <result column="buyer_nick" jdbcType="VARCHAR" property="buyerNick"/>
+        <result column="buyer_rate" jdbcType="INTEGER" property="buyerRate"/>
+        <result column="refundStatus" jdbcType="INTEGER" property="refundStatus"/>
+        <result column="refundReason" jdbcType="VARCHAR" property="refundReason"/>
+        <result column="isRefund" jdbcType="INTEGER" property="isRefund"/>
+    </resultMap>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        delete from tb_order
+        where order_id = #{orderId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.jesper.model.Order">
+        insert into tb_order (order_id, payment, payment_type,
+        post_fee, status, create_time,
+        update_time, payment_time, consign_time,
+        end_time, close_time, shipping_name,
+        shipping_code, user_id, buyer_message,
+        buyer_nick, buyer_rate)
+        values (#{orderId,jdbcType=VARCHAR}, #{payment,jdbcType=VARCHAR}, #{paymentType,jdbcType=INTEGER},
+        #{postFee,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP},
+        #{updateTime,jdbcType=TIMESTAMP}, #{paymentTime,jdbcType=TIMESTAMP}, #{consignTime,jdbcType=TIMESTAMP},
+        #{endTime,jdbcType=TIMESTAMP}, #{closeTime,jdbcType=TIMESTAMP}, #{shippingName,jdbcType=VARCHAR},
+        #{shippingCode,jdbcType=VARCHAR}, #{userId,jdbcType=BIGINT}, #{buyerMessage,jdbcType=VARCHAR},
+        #{buyerNick,jdbcType=VARCHAR}, #{buyerRate,jdbcType=INTEGER})
+    </insert>
+    <update id="updateByPrimaryKey" parameterType="com.jesper.model.Order">
+        update tb_order
+        set refundStatus = #{refundStatus,jdbcType=INTEGER}
+        where order_id = #{orderId,jdbcType=VARCHAR}
+    </update>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select order_id, payment, payment_type, post_fee, status, create_time, update_time,
+        payment_time, consign_time, end_time, close_time, shipping_name, shipping_code, user_id,
+        buyer_message, buyer_nick, buyer_rate
+        from tb_order
+        where order_id = #{orderId,jdbcType=VARCHAR}
+    </select>
+    <select id="selectAll" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select order_id, payment, payment_type, post_fee, status, create_time, update_time,
+        payment_time, consign_time, end_time, close_time, shipping_name, shipping_code, user_id,
+        buyer_message, buyer_nick, buyer_rate
+        from tb_order
+    </select>
+
+    <select id="list" parameterType="com.jesper.model.Order" resultMap="BaseResultMap">
+        select order_id, payment, payment_type, post_fee, status, create_time, update_time,
+        payment_time, consign_time, end_time, close_time, shipping_name, shipping_code, user_id,
+        buyer_message, buyer_nick, buyer_rate
+        from tb_order where order_id is not null
+        <if test="paymentType != null and paymentType != 0">
+            AND payment_type = #{paymentType, jdbcType=INTEGER}
+        </if>
+        <if test="status != null and status != 0">
+            AND status = #{status, jdbcType=INTEGER}
+        </if>
+        <if test="minOrderTime != null and maxOrderTime != null">
+            AND create_time BETWEEN #{minOrderTime, jdbcType=TIMESTAMP} AND #{maxOrderTime, jdbcType=TIMESTAMP}
+            ORDER BY create_time
+        </if>
+        limit #{start, jdbcType=INTEGER},#{end, jdbcType=INTEGER}
+    </select>
+
+    <select id="listRefund" parameterType="com.jesper.model.Order" resultMap="BaseResultMap">
+        select order_id, payment, payment_type, post_fee, status, create_time, update_time,
+        payment_time, consign_time, end_time, close_time, shipping_name, shipping_code, user_id,
+        buyer_message, buyer_nick, buyer_rate, refundStatus, refundReason, isRefund
+        from tb_order where isRefund = 1
+        <if test="refundStatus != null and refundStatus != 0">
+            AND refundStatus = #{refundStatus, jdbcType=INTEGER}
+        </if>
+        limit #{start, jdbcType=INTEGER},#{end, jdbcType=INTEGER}
+    </select>
+
+    <select id="selectCurOrderNum" resultType="java.lang.Integer">
+      select count(*) from tb_order where date_format( create_time, '%Y-%m') = date_format(now(), '%Y-%m')
+     </select>
+
+    <select id="selectLastOrderNum" resultType="java.lang.Integer">
+        select count(*) from tb_order where period_diff(date_format(now(),'%Y%m'), date_format(create_time,'%Y%m')) = 1
+    </select>
+
+
+    <select id="selectCurPayment" resultType="java.lang.Long">
+
+        SELECT SUM(payment) FROM tb_order
+        where status = 5 AND date_format(create_time, '%Y-%m') = date_format(now(), '%Y-%m')
+    </select>
+
+    <select id="selectLastPayment" resultType="java.lang.Long">
+
+        SELECT SUM(payment) FROM tb_order
+        where  status = 5 AND  period_diff(date_format(now(),'%Y%m'), date_format(create_time,'%Y%m')) = 1
+    </select>
+
+
+    <select id="selectCurRefundOrder" resultType="java.lang.Integer">
+
+        SELECT count(*) FROM tb_order
+        where date_format(update_time, '%Y-%m') = date_format(now(), '%Y-%m')
+        AND  refundStatus = 3
+    </select>
+
+    <select id="selectLastRefundOrder" resultType="java.lang.Integer">
+
+        SELECT count(*) FROM tb_order
+        where period_diff(date_format(now(),'%Y%m'), date_format(update_time,'%Y%m')) = 1
+        AND  refundStatus = 3
+    </select>
+
+    <select id="selectDayOrderNum" parameterType="com.jesper.model.Order" resultType="java.lang.Integer">
+        SELECT count(*) FROM tb_order
+        WHERE create_time BETWEEN  #{createTime, jdbcType=DATE} AND  date_add(#{createTime, jdbcType=DATE}, interval 1 day)
+    </select>
+
+    <select id="selectDayOrderSum" parameterType="com.jesper.model.Order" resultType="java.lang.Integer">
+        SELECT sum(payment) FROM tb_order
+        WHERE create_time BETWEEN  #{createTime, jdbcType=DATE} AND  date_add(#{createTime, jdbcType=DATE}, interval 1 day)
+    </select>
+
+    <resultMap id="monthMap" type="com.jesper.model.Month">
+
+        <result column="一月份" jdbcType="INTEGER" property="Jan"/>
+        <result column="二月份" jdbcType="INTEGER" property="Feb"/>
+        <result column="三月份" jdbcType="INTEGER" property="Mar"/>
+        <result column="四月份" jdbcType="INTEGER" property="Apr"/>
+        <result column="五月份" jdbcType="INTEGER" property="May"/>
+        <result column="六月份" jdbcType="INTEGER" property="Jun"/>
+        <result column="七月份" jdbcType="INTEGER" property="Jul"/>
+        <result column="八月份" jdbcType="INTEGER" property="Aug"/>
+        <result column="九月份" jdbcType="INTEGER" property="Sep"/>
+        <result column="十月份" jdbcType="INTEGER" property="Oct"/>
+        <result column="十一月份" jdbcType="INTEGER" property="Nov"/>
+        <result column="十二月份" jdbcType="INTEGER" property="Dec"/>
+
+    </resultMap>
+
+</mapper>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jesper.mapper.ItemMapper">
+    <resultMap id="BaseResultMap" type="com.jesper.model.Item">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="sell_point" property="sellPoint" jdbcType="VARCHAR"/>
+        <result column="price" property="price" jdbcType="INTEGER"/>
+        <result column="num" property="num" jdbcType="INTEGER"/>
+        <result column="barcode" property="barcode" jdbcType="VARCHAR"/>
+        <result column="image" property="image" jdbcType="VARCHAR"/>
+        <result column="cid" property="cid" jdbcType="INTEGER"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="created" property="created" jdbcType="TIMESTAMP"/>
+        <result column="updated" property="updated" jdbcType="TIMESTAMP"/>
+        <result column="categoryName" property="categoryName" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
+    <select id="findById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        SELECT * from tb_item where id = #{id, jdbcType=INTEGER}
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT * from tb_item
+    </select>
+
+    <select id="list" resultMap="BaseResultMap" parameterType="com.jesper.model.Item">
+        SELECT i.* , t.name as categoryName FROM tb_item i LEFT JOIN tb_category t ON i.cid = t.id WHERE i.status = 1
+        <if test="title != null">
+            AND title LIKE concat('%', #{title, jdbcType=VARCHAR}, '%')
+        </if>
+        <if test="cid != 0">
+            AND cid = #{cid, jdbcType=INTEGER}
+        </if>
+        <if test="minPrice != null and maxPrice != null">
+            AND price BETWEEN #{minPrice, jdbcType=INTEGER} AND #{maxPrice, jdbcType=INTEGER}
+        </if>
+        ORDER BY updated desc
+        limit #{start, jdbcType=INTEGER},#{end, jdbcType=INTEGER}
+    </select>
+
+    <select id="listS" resultMap="BaseResultMap" parameterType="com.jesper.model.Item">
+        SELECT i.* , t.name as categoryName FROM tb_item i LEFT JOIN tb_category t ON i.cid = t.id WHERE i.status = 1
+        <if test="title != null">
+            AND title LIKE concat('%', #{title, jdbcType=VARCHAR}, '%')
+        </if>
+        <if test="cid != 0">
+            AND cid = #{cid, jdbcType=INTEGER}
+        </if>
+        <if test="minNum != null and maxNum != null">
+            AND num BETWEEN #{minNum, jdbcType=INTEGER} AND #{maxNum, jdbcType=INTEGER}
+            ORDER BY num
+        </if>
+        limit #{start, jdbcType=INTEGER},#{end, jdbcType=INTEGER}
+    </select>
+
+    <select id="count" resultType="java.lang.Integer" parameterType="com.jesper.model.Item">
+        SELECT count(*) from tb_item i LEFT JOIN tb_category t ON i.cid = t.id WHERE i.status = 1
+        <if test="title != null">
+            AND title LIKE concat('%', #{title, jdbcType=VARCHAR}, '%')
+        </if>
+        <if test="cid != 0">
+            AND cid = #{cid, jdbcType=INTEGER}
+        </if>
+
+        <if test="minPrice != null and maxPrice != null">
+            AND price BETWEEN #{minPrice, jdbcType=INTEGER} AND #{maxPrice, jdbcType=INTEGER}
+            ORDER BY price
+        </if>
+    </select>
+    <insert id="insert" parameterType="com.jesper.model.Item" useGeneratedKeys="true" keyProperty="id">
+         INSERT INTO tb_item (id, title, sell_point, price, num, barcode, image, cid, status, created, updated)
+         VALUE (
+         #{id, jdbcType=INTEGER},
+         #{title, jdbcType=VARCHAR},
+         #{sellPoint, jdbcType=VARCHAR},
+         #{price, jdbcType=INTEGER},
+         #{num, jdbcType=INTEGER},
+         #{barcode, jdbcType=VARCHAR},
+         #{image, jdbcType=VARCHAR},
+         #{cid, jdbcType=INTEGER},
+         1,
+         #{created, jdbcType=TIMESTAMP},
+         #{updated, jdbcType=TIMESTAMP}
+          )
+    </insert>
+
+    <update id="update" parameterType="com.jesper.model.Item">
+        UPDATE tb_item SET
+        <if test="title != null">
+            title = #{title, jdbcType=VARCHAR},
+        </if>
+        <if test="sellPoint != null">
+            sell_point= #{sellPoint, jdbcType=VARCHAR},
+        </if>
+        <if test="price != null">
+            price = #{price, jdbcType=INTEGER},
+        </if>
+        <if test="num != null">
+            num = #{num, jdbcType=INTEGER},
+        </if>
+        <if test="cid != null">
+            cid = #{cid, jdbcType=INTEGER},
+        </if>
+        <if test="updated != null">
+            updated = #{updated, jdbcType=TIMESTAMP},
+        </if>
+        <if test="image != null">
+            image = #{image, jdbcType=VARCHAR}
+        </if>
+        WHERE id = #{id, jdbcType=INTEGER}
+    </update>
+    <delete id="delete" parameterType="com.jesper.model.Item">
+        DELETE FROM tb_item WHERE id = #{id, jdbcType=INTEGER}
+    </delete>
+</mapper>

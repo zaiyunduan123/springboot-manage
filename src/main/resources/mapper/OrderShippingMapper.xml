@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jesper.mapper.OrderShippingMapper">
+    <resultMap id="BaseResultMap" type="com.jesper.model.OrderShipping">
+        <id column="order_id" jdbcType="VARCHAR" property="orderId"/>
+        <result column="receiver_name" jdbcType="VARCHAR" property="receiverName"/>
+        <result column="receiver_phone" jdbcType="VARCHAR" property="receiverPhone"/>
+        <result column="receiver_mobile" jdbcType="VARCHAR" property="receiverMobile"/>
+        <result column="receiver_state" jdbcType="VARCHAR" property="receiverState"/>
+        <result column="receiver_city" jdbcType="VARCHAR" property="receiverCity"/>
+        <result column="receiver_district" jdbcType="VARCHAR" property="receiverDistrict"/>
+        <result column="receiver_address" jdbcType="VARCHAR" property="receiverAddress"/>
+        <result column="receiver_zip" jdbcType="VARCHAR" property="receiverZip"/>
+        <result column="created" jdbcType="TIMESTAMP" property="created"/>
+        <result column="updated" jdbcType="TIMESTAMP" property="updated"/>
+    </resultMap>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from tb_order_shipping
+    where order_id = #{orderId,jdbcType=VARCHAR}
+  </delete>
+    <insert id="insert" parameterType="com.jesper.model.OrderShipping">
+    insert into tb_order_shipping (order_id, receiver_name, receiver_phone, 
+      receiver_mobile, receiver_state, receiver_city, 
+      receiver_district, receiver_address, receiver_zip, 
+      created, updated)
+    values (#{orderId,jdbcType=VARCHAR}, #{receiverName,jdbcType=VARCHAR}, #{receiverPhone,jdbcType=VARCHAR}, 
+      #{receiverMobile,jdbcType=VARCHAR}, #{receiverState,jdbcType=VARCHAR}, #{receiverCity,jdbcType=VARCHAR}, 
+      #{receiverDistrict,jdbcType=VARCHAR}, #{receiverAddress,jdbcType=VARCHAR}, #{receiverZip,jdbcType=VARCHAR}, 
+      #{created,jdbcType=TIMESTAMP}, #{updated,jdbcType=TIMESTAMP})
+  </insert>
+    <update id="updateByPrimaryKey" parameterType="com.jesper.model.OrderShipping">
+    update tb_order_shipping
+    set receiver_name = #{receiverName,jdbcType=VARCHAR},
+      receiver_phone = #{receiverPhone,jdbcType=VARCHAR},
+      receiver_mobile = #{receiverMobile,jdbcType=VARCHAR},
+      receiver_state = #{receiverState,jdbcType=VARCHAR},
+      receiver_city = #{receiverCity,jdbcType=VARCHAR},
+      receiver_district = #{receiverDistrict,jdbcType=VARCHAR},
+      receiver_address = #{receiverAddress,jdbcType=VARCHAR},
+      receiver_zip = #{receiverZip,jdbcType=VARCHAR},
+      created = #{created,jdbcType=TIMESTAMP},
+      updated = #{updated,jdbcType=TIMESTAMP}
+    where order_id = #{orderId,jdbcType=VARCHAR}
+  </update>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select order_id, receiver_name, receiver_phone, receiver_mobile, receiver_state, 
+    receiver_city, receiver_district, receiver_address, receiver_zip, created, updated
+    from tb_order_shipping
+    where order_id = #{orderId,jdbcType=VARCHAR}
+  </select>
+    <select id="selectAll" resultMap="BaseResultMap">
+    select order_id, receiver_name, receiver_phone, receiver_mobile, receiver_state, 
+    receiver_city, receiver_district, receiver_address, receiver_zip, created, updated
+    from tb_order_shipping
+  </select>
+</mapper>

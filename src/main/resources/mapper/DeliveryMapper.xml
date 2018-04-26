@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jesper.mapper.DeliveryMapper">
+    <resultMap id="BaseResultMap" type="com.jesper.model.Delivery">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="delivery_name" property="deliveryName" jdbcType="VARCHAR"/>
+        <result column="delivery_code" property="deliveryCode" jdbcType="VARCHAR"/>
+        <result column="delivery_sort" property="deliverySort" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from kuaidi100_delivery
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+    <delete id="deleteByDeliveryName" parameterType="java.lang.String">
+    delete from kuaidi100_delivery
+    where delivery_name = #{deliveryName,jdbcType=VARCHAR}
+  </delete>
+
+
+    <insert id="insert" parameterType="com.jesper.model.Delivery">
+    insert into kuaidi100_delivery ( delivery_name, delivery_code,
+      delivery_sort)
+    values ( #{deliveryName,jdbcType=VARCHAR}, #{deliveryCode,jdbcType=VARCHAR},
+      #{deliverySort,jdbcType=VARCHAR})
+  </insert>
+
+    <update id="updateByPrimaryKey" parameterType="com.jesper.model.Delivery">
+    update kuaidi100_delivery
+    set delivery_name = #{deliveryName,jdbcType=VARCHAR},
+      delivery_code = #{deliveryCode,jdbcType=VARCHAR},
+      delivery_sort = #{deliverySort,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select id, delivery_name, delivery_code, delivery_sort
+    from kuaidi100_delivery
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+    <select id="selectByName" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select id, delivery_name, delivery_code, delivery_sort
+    from kuaidi100_delivery
+    where delivery_name = #{deliveryName,jdbcType=VARCHAR}
+  </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+    select id, delivery_name, delivery_code, delivery_sort
+    from kuaidi100_delivery ORDER BY  delivery_sort
+  </select>
+</mapper>

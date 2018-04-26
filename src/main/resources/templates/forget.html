@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<title>INSPINIA | Forget</title>
+
+<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+<link th:href="@{/font-awesome/css/font-awesome.css}" rel="stylesheet" />
+
+<link th:href="@{/css/animate.css}" rel="stylesheet" />
+<link th:href="@{/css/style.css}" rel="stylesheet" />
+
+<!-- Sweet Alert -->
+<link th:href="@{/css/plugins/sweetalert/sweetalert.css}" rel="stylesheet"/>
+    
+</head>
+
+<body class="gray-bg">
+
+	<div class="middle-box text-center loginscreen animated fadeInDown">
+		<div>
+			<div>
+				<h2 class="logo-name">YX</h2>
+			</div>
+			<h3>后台信息管理系统  密码找回</h3>
+			<!--<p>Login in. To see it in action.</p>-->
+			<form class="m-t" role="form" action="forget" method="post">
+				<div class="form-group">
+					<input type="text" class="form-control" placeholder="输入注册时的账号" name="userName" required="" />
+				</div>
+				<div class="form-group">
+					<input type="email" class="form-control" placeholder="输入注册时绑定的邮箱" name="email" required="" />
+				</div>
+				<button type="submit" class="btn btn-primary block full-width m-b">确  认</button>
+
+				<a class="btn btn-sm btn-white btn-block" th:href="@{login}" href="register.html">返回登录</a>
+			</form>
+			<!--<p class="m-t">-->
+				<!--<small>Inspinia we app framework base on Bootstrap 3 &copy; 2014</small>-->
+			<!--</p>-->
+		</div>
+	</div>
+
+	<!-- Mainly scripts -->
+	<script th:src="@{/js/jquery-2.1.1.js}"></script>
+	<script th:src="@{/js/bootstrap.min.js}"></script>
+	<!-- Sweet alert -->
+    <script th:src="@{/js/plugins/sweetalert/sweetalert.min.js}"></script>
+
+	
+	<script th:inline="javascript">
+		var error = [[${error}]];
+		$(document).ready(function () {
+			if(error!=null){
+				 swal({
+		         	title : "温馨提示",
+		         	text : error
+		      	});
+			}
+		});
+
+	</script>
+</body>
+
+</html>

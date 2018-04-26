@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jesper.mapper.ItemCategoryMapper">
+    <resultMap id="BaseResultMap" type="com.jesper.model.ItemCategory">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="parent_id" property="parentId" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="sort_order" property="sortOrder" jdbcType="INTEGER"/>
+        <result column="is_parent" property="isParent" jdbcType="TINYINT"/>
+        <result column="created" property="created" jdbcType="TIMESTAMP"/>
+        <result column="updated" property="updated" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="findById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        SELECT * from tb_category where id = #{id, jdbcType=INTEGER}
+    </select>
+
+    <select id="list" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT * from tb_category where status = 1
+        <if test="name != null">
+            AND name LIKE concat('%', #{name, jdbcType=VARCHAR}, '%')
+        </if>
+        ORDER BY updated DESC
+        limit #{start}, #{end}
+    </select>
+    <select id="list1" resultMap="BaseResultMap">
+        SELECT * from tb_category where status = 1 ORDER BY updated DESC
+    </select>
+
+    <select id="count" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT count(*) from tb_category WHERE status = 1
+        <if test="name != null">
+            AND name LIKE concat('%', #{name, jdbcType=VARCHAR}, '%')
+        </if>
+    </select>
+
+
+    <insert id="insert" parameterType="com.jesper.model.ItemCategory" useGeneratedKeys="true" keyProperty="id">
+           INSERT INTO tb_category (id, parent_id, name, status, sort_order, is_parent, created, updated)
+           value ( #{id, jdbcType=INTEGER},
+            null,
+            #{name, jdbcType=VARCHAR},
+            1,
+            null,
+            null,
+            #{created, jdbcType=TIMESTAMP},
+            #{updated, jdbcType=TIMESTAMP}
+           )
+    </insert>
+
+    <update id="update" parameterType="com.jesper.model.ItemCategory">
+           UPDATE tb_category SET
+           name = #{name, jdbcType=VARCHAR},
+           updated = now()
+            WHERE  id =  #{id, jdbcType=INTEGER}
+    </update>
+
+    <update id="updateStatus" parameterType="com.jesper.model.ItemCategory">
+         UPDATE tb_category SET
+          status = #{status, jdbcType=INTEGER},
+          updated = now()
+          WHERE  id =  id = #{id, jdbcType=INTEGER}
+    </update>
+    <delete id="delete" parameterType="java.lang.Integer">
+        DELETE FROM tb_category WHERE id = #{id, jdbcType=INTEGER}
+    </delete>
+
+</mapper>

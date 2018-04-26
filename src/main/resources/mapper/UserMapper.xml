@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jesper.mapper.UserMapper">
+    <resultMap id="BaseResultMap" type="com.jesper.model.User">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="userName" property="userName" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="realName" property="realName" jdbcType="VARCHAR"/>
+        <result column="business" property="business" jdbcType="VARCHAR"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="headPicture" property="headPicture" jdbcType="VARCHAR"/>
+        <result column="addDate" property="addDate" jdbcType="DATE"/>
+        <result column="updateDate" property="updateDate" jdbcType="DATE"/>
+        <result column="state" property="state" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <select id="selectByNameAndPwd" resultMap="BaseResultMap" parameterType="java.lang.String">
+      SELECT * from tb_user  where userName = #{userName, jdbcType=VARCHAR} and password = #{password, jdbcType=VARCHAR} and state = 1
+  </select>
+
+    <select id="selectIsName" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT 1 from tb_user  where userName = #{userName, jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectPasswordByName" resultType="java.lang.String" parameterType="com.jesper.model.User">
+        SELECT password from tb_user  where userName = #{userName, jdbcType=VARCHAR} AND  email = #{email, jdbcType=VARCHAR}
+    </select>
+
+    <insert id="insert" parameterType="com.jesper.model.User">
+        INSERT INTO tb_user (id, userName, password, realName, business, email, headPicture, addDate, updateDate, state)
+        VALUES   (null, #{userName, jdbcType=VARCHAR}, #{password, jdbcType=VARCHAR}, null, null, #{email, jdbcType=VARCHAR}, null, #{addDate, jdbcType=DATE}, #{updateDate, jdbcType=DATE}, 1)
+    </insert>
+
+    <update id="update" parameterType="com.jesper.model.User">
+        UPDATE tb_user SET
+        password = #{password, jdbcType=VARCHAR},
+        email = #{email, jdbcType=VARCHAR},
+        realName = #{realName, jdbcType=VARCHAR},
+        business = #{business, jdbcType=VARCHAR},
+        updateDate = #{updateDate, jdbcType=DATE}
+        WHERE   userName = #{userName, jdbcType=VARCHAR}
+    </update>
+</mapper>
