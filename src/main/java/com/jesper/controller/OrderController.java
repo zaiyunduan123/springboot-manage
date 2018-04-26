@@ -48,17 +48,15 @@ public class OrderController {
 
     @RequestMapping("/user/orderManage_{pageCurrent}_{pageSize}_{pageCount}")
     public String orderManage(Order order, @PathVariable Integer pageCurrent,
-                             @PathVariable Integer pageSize,
-                             @PathVariable Integer pageCount,
-                             Model model) {
-        //判断
+                              @PathVariable Integer pageSize,
+                              @PathVariable Integer pageCount,
+                              Model model) {
         if (pageSize == 0) pageSize = 50;
         if (pageCurrent == 0) pageCurrent = 1;
         order.setMinOrderTime(DateUtil.strToDate(order.getMinOrderTimeStr()));
         order.setMaxOrderTime(DateUtil.strToDate(order.getMaxOrderTimeStr()));
         int rows = orderMapper.list(order).size();
         if (pageCount == 0) pageCount = rows % pageSize == 0 ? (rows / pageSize) : (rows / pageSize) + 1;
-        //查询
         order.setStart((pageCurrent - 1) * pageSize);
         order.setEnd(pageSize);
         orderList = orderMapper.list(order);
@@ -74,10 +72,8 @@ public class OrderController {
                 order1.setPaymentTypeStr(getPaymentTypeById(order1.getPaymentType()));
             }
         }
-        //输出
         model.addAttribute("orderList", orderList);
-//        "&commendState="+news.getCommendState()+
-        String pageHTML = PageUtil.getPageContent("itemManage_{pageCurrent}_{pageSize}_{pageCount}?title=" + order.getItemTitle() + "&orderId" + order.getOrderId() + "&minOrderTimeStr" + order.getMinOrderTimeStr() +  "&maxOrderTimeStr" + order.getMaxOrderTimeStr() +  "&status" + order.getStatus(), pageCurrent, pageSize, pageCount);
+        String pageHTML = PageUtil.getPageContent("itemManage_{pageCurrent}_{pageSize}_{pageCount}?title=" + order.getItemTitle() + "&orderId" + order.getOrderId() + "&minOrderTimeStr" + order.getMinOrderTimeStr() + "&maxOrderTimeStr" + order.getMaxOrderTimeStr() + "&status" + order.getStatus(), pageCurrent, pageSize, pageCount);
         model.addAttribute("pageHTML", pageHTML);
         model.addAttribute("order", order);
         return "order/orderManage";
@@ -108,7 +104,7 @@ public class OrderController {
         response.setContentType("application/octet-stream");
         response.setHeader("Content-disposition", "attachment;filename=OrderManage.xls");//默认Excel名称
         response.flushBuffer();
-        OutputStream fos  = response.getOutputStream();
+        OutputStream fos = response.getOutputStream();
         try {
             ExcelUtil.listToExcel(orderList, fieldMap, sheetName, fos);
         } catch (Exception e) {
@@ -139,6 +135,7 @@ public class OrderController {
         }
         return "order/orderDetails";
     }
+
     @PostMapping("/user/orderDetails")
     public String orderDetailsPost(Model model, @RequestParam MultipartFile[] imageFile, HttpSession httpSession) {
         //根据时间和随机数生成id
@@ -148,6 +145,7 @@ public class OrderController {
 
     /**
      * 退款管理
+     *
      * @param order
      * @param pageCurrent
      * @param pageSize
@@ -157,22 +155,18 @@ public class OrderController {
      */
     @RequestMapping("/user/orderRefund_{pageCurrent}_{pageSize}_{pageCount}")
     public String RefundManage(Order order, @PathVariable Integer pageCurrent,
-                             @PathVariable Integer pageSize,
-                             @PathVariable Integer pageCount,
-                             Model model) {
-        //判断
+                               @PathVariable Integer pageSize,
+                               @PathVariable Integer pageCount,
+                               Model model) {
         if (pageSize == 0) pageSize = 50;
         if (pageCurrent == 0) pageCurrent = 1;
 
 
         int rows = orderMapper.list(order).size();
         if (pageCount == 0) pageCount = rows % pageSize == 0 ? (rows / pageSize) : (rows / pageSize) + 1;
-        //查询
         order.setStart((pageCurrent - 1) * pageSize);
         order.setEnd(pageSize);
-
         List<Order> orderList = orderMapper.listRefund(order);
-
         for (Order order1 : orderList) {
             String orderId = order1.getOrderId();
             if (orderItemMapper.selectByPrimaryOrderKey(orderId) != null) {
@@ -186,16 +180,16 @@ public class OrderController {
                 order1.setRefundStatusStr(getRefundStatusStr(order1.getRefundStatus()));
             }
         }
-        //输出
         model.addAttribute("orderList", orderList);
-//        "&commendState="+news.getCommendState()+
-        String pageHTML = PageUtil.getPageContent("orderRefund_{pageCurrent}_{pageSize}_{pageCount}?refundStatus=" + order.getRefundStatus() , pageCurrent, pageSize, pageCount);
+        String pageHTML = PageUtil.getPageContent("orderRefund_{pageCurrent}_{pageSize}_{pageCount}?refundStatus=" + order.getRefundStatus(), pageCurrent, pageSize, pageCount);
         model.addAttribute("pageHTML", pageHTML);
         model.addAttribute("order", order);
         return "order/orderRefund";
     }
+
     /**
      * 审批
+     *
      * @param model
      * @param order
      * @return
@@ -224,16 +218,16 @@ public class OrderController {
     @PostMapping("/user/orderCheck")
     public String orderCheckPost(Model model, @RequestParam MultipartFile[] imageFile, Order order, HttpSession httpSession) {
 
-        if (order.getRefundStatus() == null){
+        if (order.getRefundStatus() == null) {
             order.setRefundStatus(0);
         }
-        if (order.getOrderId() != null){
+        if (order.getOrderId() != null) {
             orderMapper.updateByPrimaryKey(order);
         }
         return "redirect:orderRefund_0_0_0";
     }
 
-    public String getRefundStatusStr(int i){
+    public String getRefundStatusStr(int i) {
         switch (i) {
             case 1:
                 return "申请退款";
@@ -244,7 +238,7 @@ public class OrderController {
         }
         return null;
     }
-    
+
     public String getbuyerRateStrById(int i) {
         switch (i) {
             case 0:

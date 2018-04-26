@@ -38,15 +38,12 @@ public class ItemCategoryController {
         if(pageCurrent == 0) pageCurrent = 1;
         int rows = itemCategoryMapper.count(itemCategory);
         if(pageCount == 0) pageCount = rows%pageSize == 0 ? (rows/pageSize) : (rows/pageSize) + 1;
-
         itemCategory.setStart((pageCurrent - 1)*pageSize);
         itemCategory.setEnd(pageSize);
-
         List<ItemCategory> list = itemCategoryMapper.list(itemCategory);
         for (ItemCategory i : list){
             i.setCreatedStr(DateUtil.getDateStr(i.getCreated()));
         }
-
         model.addAttribute("list", list);
         String pageHTML = PageUtil.getPageContent("itemCategoryManage_{pageCurrent}_{pageSize}_{pageCount}?name="+itemCategory.getName(), pageCurrent, pageSize, pageCount);
         model.addAttribute("pageHTML", pageHTML);
@@ -68,10 +65,8 @@ public class ItemCategoryController {
         Date date = new Date();
         Random random = new Random();
         int rannum = (int) (random.nextDouble() * (999 - 100 + 1)) + 10;// 获取3位随机数
-
         itemCategory.setCreated(date);
         itemCategory.setUpdated(date);
-
         List<ItemCategory> list = itemCategoryMapper.list1();
         String name = itemCategory.getName();
         for(ItemCategory i : list){

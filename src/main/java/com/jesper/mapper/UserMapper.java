@@ -4,9 +4,7 @@ package com.jesper.mapper;
 import com.jesper.model.User;
 import org.apache.ibatis.annotations.Mapper;
 
-/**
- * Created by jiangyunxiong on 2018/3/8.
- */
+
 @Mapper
 public interface UserMapper {
 

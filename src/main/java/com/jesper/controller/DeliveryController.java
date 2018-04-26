@@ -25,7 +25,7 @@ public class DeliveryController {
     @Autowired
     private  DeliveryMapper deliveryMapper;
 
-    int  id ;
+    private int  id ;
 
     @RequestMapping("user/deliveryManage")
     public String deliveryManage(Delivery delivery, Model model){
@@ -49,8 +49,7 @@ public class DeliveryController {
         delivery1.setExpressNo(delivery.getExpressNo());
         String code = delivery1.getDeliveryCode();
         String expressNo = delivery.getExpressNo();
-
-            JSONArray result = getExpress100(code, expressNo);
+        JSONArray result = getExpress100(code, expressNo);
         List<Express> list = new ArrayList<>();
         for (int j = 0; j < result.size() ; j++) {
             JSONObject object = result.getJSONObject(j);

@@ -47,8 +47,6 @@ public class ItemController {
     @Autowired
     private ReItemMapper reItemMapper;
 
-//    public static final String ROOT = "src/main/webapp/";
-
     public static final String ROOT = "src/main/resources/static/img/item/";
 
     MongoUtil mongoUtil = new MongoUtil();
@@ -69,33 +67,25 @@ public class ItemController {
                              @PathVariable Integer pageSize,
                              @PathVariable Integer pageCount,
                              Model model) {
-        //判断
         if (pageSize == 0) pageSize = 50;
         if (pageCurrent == 0) pageCurrent = 1;
 
         int rows = itemMapper.count(item);
         if (pageCount == 0) pageCount = rows % pageSize == 0 ? (rows / pageSize) : (rows / pageSize) + 1;
-        //查询
         item.setStart((pageCurrent - 1) * pageSize);
         item.setEnd(pageSize);
-//        if(item.getOrderBy()==null){
-//            item.setOrderBy(Constant.OrderByAddDateDesc);
-//        }
         itemList = itemMapper.list(item);
         for (Item i : itemList) {
             i.setUpdatedStr(DateUtil.getDateStr(i.getUpdated()));
         }
-        //分类
         ItemCategory itemCategory = new ItemCategory();
         itemCategory.setStart(0);
         itemCategory.setEnd(Integer.MAX_VALUE);
         List<ItemCategory> itemCategoryList = itemCategoryMapper.list(itemCategory);
         Integer minPrice = item.getMinPrice();
         Integer maxPrice = item.getMaxPrice();
-        //输出
         model.addAttribute("itemCategoryList", itemCategoryList);
         model.addAttribute("itemList", itemList);
-//        "&commendState="+news.getCommendState()+
         String pageHTML = PageUtil.getPageContent("itemManage_{pageCurrent}_{pageSize}_{pageCount}?title=" + item.getTitle() + "&cid=" + item.getCid() + "&minPrice" + minPrice + "&maxPrice" + maxPrice, pageCurrent, pageSize, pageCount);
         model.addAttribute("pageHTML", pageHTML);
         model.addAttribute("item", item);
@@ -117,9 +107,7 @@ public class ItemController {
         fieldMap.put("status", "商品状态，1-正常，2-下架，3-删除");
         fieldMap.put("created", "创建时间");
         fieldMap.put("updated", "更新时间");
-
         String sheetName = "商品管理报表";
-
         response.setContentType("application/octet-stream");
         response.setHeader("Content-disposition", "attachment;filename=ItemManage.xls");//默认Excel名称
         response.flushBuffer();
@@ -131,20 +119,21 @@ public class ItemController {
         }
 
     }
+
     String imageName = null;
+
     @GetMapping("/user/itemEdit")
-    public String itemEditGet(Model model,Item item) {
+    public String itemEditGet(Model model, Item item) {
         ItemCategory itemCategory = new ItemCategory();
         itemCategory.setStart(0);
         itemCategory.setEnd(Integer.MAX_VALUE);
-
         List<ItemCategory> itemCategoryList = itemCategoryMapper.list(itemCategory);
         model.addAttribute("itemCategoryList", itemCategoryList);
         if (item.getId() != 0) {
             Item item1 = itemMapper.findById(item);
             String id = String.valueOf(item.getId());
             GridFSDBFile fileById = mongoUtil.getFileById(id);
-            if (fileById != null){
+            if (fileById != null) {
                 StringBuilder sb = new StringBuilder(ROOT);
                 imageName = fileById.getFilename();
                 sb.append(imageName);
@@ -181,11 +170,11 @@ public class ItemController {
                 }
                 LinkedHashMap<String, Object> metaMap = new LinkedHashMap<String, Object>();
                 String id = null;
-                if(item.getId() != 0){
+                if (item.getId() != 0) {
                     id = String.valueOf(item.getId());
-                }else{
+                } else {
                     Random random = new Random();
-                     rannum = (int) (random.nextDouble() * (99999 - 10000 + 1)) + 1000;// 获取5位随机数
+                    rannum = (int) (random.nextDouble() * (99999 - 10000 + 1)) + 1000;// 获取5位随机数
                     id = String.valueOf(rannum);
                 }
 
@@ -207,7 +196,6 @@ public class ItemController {
             item.setId(rannum);
             itemMapper.insert(item);
         }
-
         return "redirect:itemManage_0_0_0";
     }
 
@@ -238,9 +226,7 @@ public class ItemController {
         reItem.setTitle(item.getTitle());
         reItem.setRecovered(new Date());
         reItemMapper.insert(reItem);
-
         itemMapper.delete(item1);
-
         ResObject<Object> object = new ResObject<Object>(Constant.Code01, Constant.Msg01, null, null);
         return object;
     }

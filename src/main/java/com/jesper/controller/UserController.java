@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.Date;
 
-
+/**
+ * 用户管理
+ */
 @Controller
 public class UserController {
 
@@ -34,7 +36,6 @@ public class UserController {
 
     @Value("${spring.mail.username}")
     private String Sender; //读取配置文件中的参数
-
 
     /**
      * 登录跳转

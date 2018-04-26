@@ -21,7 +21,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by jiangyunxiong on 2018/3/23.
+ * 回收管理
  */
 @Controller
 public class ReItemController {
@@ -37,32 +37,26 @@ public class ReItemController {
                              @PathVariable Integer pageSize,
                              @PathVariable Integer pageCount,
                              Model model) {
-        //判断
         if (pageSize == 0) pageSize = 50;
         if (pageCurrent == 0) pageCurrent = 1;
-
-         int rows = reItemMapper.selectAll().size();
+        int rows = reItemMapper.selectAll().size();
         if (pageCount == 0) pageCount = rows % pageSize == 0 ? (rows / pageSize) : (rows / pageSize) + 1;
-        //查询
         reItem.setStart((pageCurrent - 1) * pageSize);
         reItem.setEnd(pageSize);
-
         List<ReItem> reItemList = reItemMapper.selectAll();
-        for(ReItem r : reItemList){
+        for (ReItem r : reItemList) {
             r.setRecoveredStr(DateUtil.getDateStr(r.getRecovered()));
         }
         model.addAttribute("reItemList", reItemList);
-//        "&commendState="+news.getCommendState()+
         String pageHTML = PageUtil.getPageContent("itemManage_{pageCurrent}_{pageSize}_{pageCount}?", pageCurrent, pageSize, pageCount);
         model.addAttribute("pageHTML", pageHTML);
         model.addAttribute("ReItem", reItem);
-
         return "item/recoverManage";
     }
 
     @ResponseBody
     @PostMapping("/user/reItemEditState")
-    public ResObject<Object> reItemEditState(ReItem reItem){
+    public ResObject<Object> reItemEditState(ReItem reItem) {
         ReItem reItem1 = reItemMapper.selectByPrimaryKey(reItem.getId());
         Item item = new Item();
         item.setId(reItem1.getId());
@@ -77,17 +71,15 @@ public class ReItemController {
         item.setCreated(new Date());
         item.setUpdated(new Date());
         itemMapper.insert(item);
-
         reItemMapper.deleteByPrimaryKey(reItem.getId());
-
         ResObject<Object> object = new ResObject<Object>(Constant.Code01, Constant.Msg01, null, null);
         return object;
     }
+
     @ResponseBody
     @PostMapping("/user/deleteItemEditState")
-    public ResObject<Object> deleteItemEditState(ReItem reItem){
+    public ResObject<Object> deleteItemEditState(ReItem reItem) {
         reItemMapper.deleteByPrimaryKey(reItem.getId());
-
         ResObject<Object> object = new ResObject<Object>(Constant.Code01, Constant.Msg01, null, null);
         return object;
     }
