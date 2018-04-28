@@ -1,4 +1,4 @@
-## 基于SpringBoot+Mybatis+Thymeleaf极简版商品信息管理系统
+## 基于SpringBoot+Mybatis+Thymeleaf商品信息管理系统
 
 主要用到的技术：
 - 1、使用maven进行项目构建 
