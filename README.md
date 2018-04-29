@@ -32,3 +32,17 @@
 - **启动MongoDB和MySQL** 
 
 直接启动Application应用即可，适合初学者，开箱即用！
+
+
+## 预览效果
+![首页](https://github.com/zaiyunduan123/jesper_shop/blob/master/src/main/resources/static/img/shop-image/board.png)
+
+![商品管理](https://github.com/zaiyunduan123/jesper_shop/blob/master/src/main/resources/static/img/shop-image/item.png)
+
+![商品修改](https://github.com/zaiyunduan123/jesper_shop/blob/master/src/main/resources/static/img/shop-image/edit.png)
+
+![订单管理](https://github.com/zaiyunduan123/jesper_shop/blob/master/src/main/resources/static/img/shop-image/order.png)
+
+![物流公司](https://github.com/zaiyunduan123/jesper_shop/blob/master/src/main/resources/static/img/shop-image/kuaidi.png)
+
+![查询](https://github.com/zaiyunduan123/jesper_shop/blob/master/src/main/resources/static/img/shop-image/search.png)
