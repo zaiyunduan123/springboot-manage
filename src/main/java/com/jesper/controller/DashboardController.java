@@ -5,6 +5,8 @@ import com.jesper.mapper.OrderMapper;
 import com.jesper.model.Order;
 import com.jesper.model.Stats;
 
+import com.jesper.redis.DashboardKey;
+import com.jesper.redis.RedisService;
 import com.jesper.util.RunnableThreadWebCount;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,6 +28,7 @@ import java.util.List;
  * @param model
  * @return
  */
+
 /**
  */
 @Controller
@@ -34,46 +37,61 @@ public class DashboardController {
     @Autowired
     private OrderMapper orderMapper;
 
+    @Autowired
+    private RedisService redisService;
+
     @GetMapping("/user/dashboard")
     public String dashboard(Model model, Stats stats) {
 
-        long mIncome , lastIncome , curOrderNum , preOrderNum , curRefundOrder , lastRefundOrder , orderNum, orderSum;
+        Long mIncome, lastIncome;
+        Integer curOrderNum, preOrderNum, curRefundOrder, lastRefundOrder, orderNum, orderSum;
 
-        try {
+        //全部加缓存
+        mIncome = redisService.get(DashboardKey.board, "mIncome", Long.class);
+        if (mIncome == null) {
             mIncome = orderMapper.selectCurPayment();
-        }catch (Exception e){
-            mIncome = 0;
+            mIncome = mIncome == null ? 0L : mIncome;
+            redisService.set(DashboardKey.board, "mIncome", mIncome);
         }
-        try {
+
+        lastIncome = redisService.get(DashboardKey.board, "lastIncome", Long.class);
+        if (lastIncome == null) {
             lastIncome = orderMapper.selectLastPayment();
-        }catch (Exception e){
-            lastIncome = 0;
+            lastIncome = lastIncome == null ? 0L : lastIncome;
+            redisService.set(DashboardKey.board, "lastIncome", lastIncome);
         }
-        try {
+
+        curOrderNum = redisService.get(DashboardKey.board, "curOrderNum", Integer.class);
+        if (curOrderNum == null) {
             curOrderNum = orderMapper.selectCurOrderNum();
-        }catch (Exception e){
-            curOrderNum = 0;
+            curOrderNum = curOrderNum == null ? 0 : curOrderNum;
+            redisService.set(DashboardKey.board, "curOrderNum", curOrderNum);
         }
-        try {
+
+        preOrderNum = redisService.get(DashboardKey.board, "preOrderNum", Integer.class);
+        if (preOrderNum == null) {
             preOrderNum = orderMapper.selectLastOrderNum();
-        }catch (Exception e){
-            preOrderNum = 0;
+            preOrderNum = preOrderNum == null ? 0 : preOrderNum;
+            redisService.set(DashboardKey.board, "preOrderNum", preOrderNum);
         }
-        try {
+
+        curRefundOrder = redisService.get(DashboardKey.board, "preOrderNum", Integer.class);
+        if (curRefundOrder == null) {
             curRefundOrder = orderMapper.selectCurRefundOrder();
-        }catch (Exception e){
-            curRefundOrder = 0;
+            curRefundOrder = curRefundOrder == null ? 0 : curRefundOrder;
+            redisService.set(DashboardKey.board, "curRefundOrder", curRefundOrder);
         }
-        try {
+
+        lastRefundOrder = redisService.get(DashboardKey.board, "lastRefundOrder", Integer.class);
+        if (lastRefundOrder == null) {
             lastRefundOrder = orderMapper.selectLastRefundOrder();
-        }catch (Exception e){
-            lastRefundOrder = 0;
+            lastRefundOrder = lastRefundOrder == null ? 0 : lastRefundOrder;
+            redisService.set(DashboardKey.board, "lastRefundOrder", lastRefundOrder);
         }
 
-
-        int count =  RunnableThreadWebCount.addCount("111");
+        int count = RunnableThreadWebCount.addCount("111");
         stats.setPv(count);//访问量
-        stats.setOrderNumPer(getPer(curOrderNum,preOrderNum));//月订单数环比
+        stats.setOrderNumPer(getPer(curOrderNum, preOrderNum));//月订单数环比
         stats.setmOrderNum(orderMapper.selectCurOrderNum());//月订单数
         stats.setmIncome(mIncome);//月收入
         stats.setIncomePer(getPer(mIncome, lastIncome));//月收入环比
@@ -93,42 +111,46 @@ public class DashboardController {
 
         Date temp = new Date();
         Order order = new Order();
-        for(int  i =0; i<31;i++){
-            theCa.add(theCa.DATE,1);
+        for (int i = 0; i < 31; i++) {
+            theCa.add(theCa.DATE, 1);
             temp = theCa.getTime();
             order.setCreateTime(temp);
             //每天的订单数
-            try {
-                orderNum =  orderMapper.selectDayOrderNum(order);
-            }catch (Exception e){
-                orderNum = 0;
+            orderNum = redisService.get(DashboardKey.board, "orderNum", Integer.class);
+            if (orderNum == null) {
+                orderNum = orderMapper.selectDayOrderNum(order);
+                orderNum = orderNum == null ? 0 : orderNum;
+                redisService.set(DashboardKey.board, "orderNum", orderNum);
             }
+
             //每天的收入
-            try {
+            orderSum = redisService.get(DashboardKey.board, "orderSum", Integer.class);
+            if (orderSum == null) {
                 orderSum = orderMapper.selectDayOrderSum(order);
-            }catch (Exception e){
-                orderSum = 0;
+                orderSum = orderSum == null ? 0 : orderSum;
+                redisService.set(DashboardKey.board, "orderSum", orderSum);
             }
-            data2.add((int) orderNum);
-            data3.add((int) orderSum);
+            data2.add(orderNum);
+            data3.add(orderSum);
         }
 
         model.addAttribute("data2", data2);
         model.addAttribute("data3", data3);
         return "dashboard";
     }
-     public String getPer(long a, long b){
-         StringBuilder orderNumPer = new StringBuilder();
-         double differ = a - b;
-         double d = differ / a;
-         String s = String.format("%.2f", d);
-         orderNumPer.append(s).append("%");
-         return orderNumPer.toString();
-     }
 
-     @RequestMapping(value = "/border/website/count/")
-     @ResponseBody
-     public int count(@RequestParam("key") String key){
-         return RunnableThreadWebCount.addCount(key);
-     }
+    public String getPer(long a, long b) {
+        StringBuilder orderNumPer = new StringBuilder();
+        double differ = a - b;
+        double d = differ / a;
+        String s = String.format("%.2f", d);
+        orderNumPer.append(s).append("%");
+        return orderNumPer.toString();
+    }
+
+    @RequestMapping(value = "/border/website/count/")
+    @ResponseBody
+    public int count(@RequestParam("key") String key) {
+        return RunnableThreadWebCount.addCount(key);
+    }
 }

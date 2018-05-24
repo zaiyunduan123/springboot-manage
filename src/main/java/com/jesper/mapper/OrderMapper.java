@@ -21,17 +21,17 @@ public interface OrderMapper {
 
     List<Order> selectAll();
 
-    int selectCurOrderNum();
-    int selectLastOrderNum();
+    Integer selectCurOrderNum();
+    Integer selectLastOrderNum();
 
-    long selectCurPayment();
-    long selectLastPayment();
+    Long selectCurPayment();
+    Long selectLastPayment();
 
-    int selectCurRefundOrder();
-    int selectLastRefundOrder();
+    Integer selectCurRefundOrder();
+    Integer selectLastRefundOrder();
 
-    int selectDayOrderSum(Order order);
-    int selectDayOrderNum(Order order);
+    Integer selectDayOrderSum(Order order);
+    Integer selectDayOrderNum(Order order);
 
-    int updateByPrimaryKey(Order record);
+    Integer updateByPrimaryKey(Order record);
 }
