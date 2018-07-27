@@ -46,7 +46,7 @@
 
 
 ## 附加-数据库设计
-```
+```mysql
 DROP TABLE IF EXISTS `kuaidi100_delivery`;
 CREATE TABLE `kuaidi100_delivery` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
