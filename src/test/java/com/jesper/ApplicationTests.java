@@ -23,7 +23,7 @@ public class ApplicationTests {
 
 	@Test
 	public void saveFileTest() throws  Exception{
-		FileInputStream file = new FileInputStream("C:\\Users\\jiangyunxiong\\Desktop\\qq.jpg");
+//		FileInputStream file = new FileInputStream("C:\\Users\\jiangyunxiong\\Desktop\\qq.jpg");
 
 	}
 

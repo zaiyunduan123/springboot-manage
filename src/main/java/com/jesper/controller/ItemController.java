@@ -177,7 +177,6 @@ public class ItemController {
                     rannum = (int) (random.nextDouble() * (99999 - 10000 + 1)) + 1000;// 获取5位随机数
                     id = String.valueOf(rannum);
                 }
-
                 metaMap.put("contentType", "jpg");
                 metaMap.put("_id", id);
                 mongoUtil.uploadFile(tempFile, id, metaMap);
@@ -209,7 +208,6 @@ public class ItemController {
         }
     }
 
-
     @ResponseBody
     @PostMapping("/user/itemEditState")
     public ResObject<Object> itemEditState(Item item1) {
@@ -230,6 +228,4 @@ public class ItemController {
         ResObject<Object> object = new ResObject<Object>(Constant.Code01, Constant.Msg01, null, null);
         return object;
     }
-
-
 }
